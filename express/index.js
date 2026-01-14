@@ -48,6 +48,11 @@ app.get("/get-single-job/:id", (req, res) => {
   });
 });
 
+// Optional -> /acd o /abcd
+app.get("a{b}cd", (req, res) => {
+  res.send("abcd o acd");
+});
+
 // Starting the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
