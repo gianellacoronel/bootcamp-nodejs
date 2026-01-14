@@ -58,6 +58,11 @@ app.get("bb*bb", (req, res) => {
   res.send("ab*cd");
 });
 
+// Long routes that we don't know how it finished
+app.get("/file/*filename", (req, res) => {
+  res.send("/file/*");
+});
+
 // Starting the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
