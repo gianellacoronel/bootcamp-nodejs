@@ -12,8 +12,14 @@ app.use((request, respond, next) => {
   next();
 });
 
+const previousHomeMiddleware = (request, response, next) => {
+  console.log("Executing previous middleware to the route");
+  next();
+};
+
 // Defining the route
-app.get("/", (request, respond) => {
+// Here, the middleware will be executed before the route handler
+app.get("/", previousHomeMiddleware, (request, respond) => {
   respond.send("Hello World!");
 });
 
