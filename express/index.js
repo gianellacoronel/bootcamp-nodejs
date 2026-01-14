@@ -53,6 +53,11 @@ app.get("a{b}cd", (req, res) => {
   res.send("abcd o acd");
 });
 
+// Comodin * -> return all routes that start with ab and end with cd
+app.get("bb*bb", (req, res) => {
+  res.send("ab*cd");
+});
+
 // Starting the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
