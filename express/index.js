@@ -27,6 +27,27 @@ app.get("/health", (request, response) => {
   response.json({ status: "ok", uptime: process.uptime() });
 });
 
+app.get("/get-jobs", (req, res) => {
+  return res.json({
+    jobs: [
+      { id: 1, title: "Software Engineer", company: "Google" },
+      { id: 2, title: "Data Scientist", company: "Amazon" },
+      { id: 3, title: "Product Manager", company: "Facebook" },
+    ],
+  });
+});
+
+app.get("/get-single-job/:id", (req, res) => {
+  // Params are ALWAYS parsed as STRINGS
+  const { id } = req.params;
+
+  const idNumber = Number(id);
+
+  return res.json({
+    job: { id: idNumber, title: `Job with id ${id}` },
+  });
+});
+
 // Starting the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
