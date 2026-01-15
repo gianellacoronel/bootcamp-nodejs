@@ -1,4 +1,6 @@
 import express from "express";
+//In Node.js, we import JSON files using the import statement with the type option set to "json".
+import jobs from "./jobs.json" with { type: "json" };
 
 const PORT = process.env.PORT || 1234;
 const app = express();
