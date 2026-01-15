@@ -30,7 +30,7 @@ app.get("/health", (request, response) => {
   response.json({ status: "ok", uptime: process.uptime() });
 });
 
-app.get("/get-jobs", async (req, res) => {
+app.get("/jobs", async (req, res) => {
   // We only import data when we call this GET
   // const { default: jobs } = await import("./jobs.json", {
   //   with: { type: "json" },
@@ -72,7 +72,7 @@ app.get("/get-jobs", async (req, res) => {
   return res.json(paginatedJobs);
 });
 
-app.get("/get-single-job/:id", (req, res) => {
+app.get("/jobs/:id", (req, res) => {
   // Params are ALWAYS parsed as STRINGS
   const { id } = req.params;
 
@@ -81,6 +81,18 @@ app.get("/get-single-job/:id", (req, res) => {
   return res.json({
     job: { id: idNumber, title: `Job with id ${id}` },
   });
+});
+
+app.post("/jobs", (req, res) => {
+  // TODO
+});
+
+app.put("/jobs/:id", (req, res) => {
+  // TODO
+});
+
+app.delete("/jobs/:id", (req, res) => {
+  // TODO
 });
 
 // Optional -> /acd o /abcd
