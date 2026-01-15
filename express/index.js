@@ -1,8 +1,9 @@
 import express from "express";
 //In Node.js, we import JSON files using the import statement with the type option set to "json".
 import jobs from "./jobs.json" with { type: "json" };
+import { DEFAULTS } from "./config";
 
-const PORT = process.env.PORT || 1234;
+const PORT = process.env.PORT || DEFAULTS.PORT;
 const app = express();
 
 //This is a middleware, in every route, it will be executed before the route handler
@@ -35,7 +36,13 @@ app.get("/get-jobs", async (req, res) => {
   //   with: { type: "json" },
   // });
 
-  const { text, titlem, limit, technology } = req.query;
+  const {
+    text,
+    title,
+    limit = DEFAULTS.LIMIT_PAGINATION,
+    technology,
+    offset = DEFAULTS.LIMIT_OFFSET,
+  } = req.query;
   let filteredJobs = jobs;
   if (text) {
     const searchTerm = text.toLowerCase();
@@ -45,7 +52,24 @@ app.get("/get-jobs", async (req, res) => {
         job.description.toLowerCase().includes(searchTerm),
     );
   }
-  return res.json(filteredJobs);
+
+  if (technology) {
+    filteredJobs = filteredJobs.filter(
+      (job) => job,
+      technology.includes(technology),
+    );
+  }
+
+  // Pagination
+  const limitNumber = Number(limit);
+  const offsetNumber = Number(offset);
+
+  const paginatedJobs = filteredJobs.slice(
+    offsetNumber,
+    offsetNumber + limitNumber,
+  );
+
+  return res.json(paginatedJobs);
 });
 
 app.get("/get-single-job/:id", (req, res) => {
