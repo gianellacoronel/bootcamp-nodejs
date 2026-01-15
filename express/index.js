@@ -1,6 +1,6 @@
 import express from "express";
 //In Node.js, we import JSON files using the import statement with the type option set to "json".
-// import jobs from "./jobs.json" with { type: "json" };
+import jobs from "./jobs.json" with { type: "json" };
 
 const PORT = process.env.PORT || 1234;
 const app = express();
@@ -31,10 +31,21 @@ app.get("/health", (request, response) => {
 
 app.get("/get-jobs", async (req, res) => {
   // We only import data when we call this GET
-  const { default: jobs } = await import("./jobs.json", {
-    with: { type: "json" },
-  });
-  return res.json(jobs);
+  // const { default: jobs } = await import("./jobs.json", {
+  //   with: { type: "json" },
+  // });
+
+  const { text, titlem, limit, technology } = req.query;
+  let filteredJobs = jobs;
+  if (text) {
+    const searchTerm = text.toLowerCase();
+    filteredJobs = filteredJobs.filter(
+      (job) =>
+        job.title.toLowerCase().includes(searchTerm) ||
+        job.description.toLowerCase().includes(searchTerm),
+    );
+  }
+  return res.json(filteredJobs);
 });
 
 app.get("/get-single-job/:id", (req, res) => {
