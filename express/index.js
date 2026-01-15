@@ -1,41 +1,27 @@
 import express from "express";
-//In Node.js, we import JSON files using the import statement with the type option set to "json".
 import jobs from "./jobs.json" with { type: "json" };
-import { DEFAULTS } from "./config";
+import { DEFAULTS } from "./config.js";
 
-const PORT = process.env.PORT || DEFAULTS.PORT;
 const app = express();
 
-//This is a middleware, in every route, it will be executed before the route handler
 app.use((request, respond, next) => {
   const timeString = new Date().toLocaleTimeString();
   console.log(`[${timeString}] ${request.method} ${request.url}`);
 
-  // We NEED to put its NEXT step
   next();
 });
 
-const previousHomeMiddleware = (request, response, next) => {
-  console.log("Executing previous middleware to the route");
-  next();
-};
-
-// Defining the route
-// Here, the middleware will be executed before the route handler
-app.get("/", previousHomeMiddleware, (request, respond) => {
-  respond.send("Hello World!");
+app.get("/", (request, response) => {
+  response.send("Hello World!");
 });
 
 app.get("/health", (request, response) => {
   response.json({ status: "ok", uptime: process.uptime() });
 });
 
-app.get("/jobs", async (req, res) => {
-  // We only import data when we call this GET
-  // const { default: jobs } = await import("./jobs.json", {
-  //   with: { type: "json" },
-  // });
+// CRUD: Create, Read, Update, Delete
 
+app.get("/jobs", async (req, res) => {
   const {
     text,
     title,
@@ -60,7 +46,6 @@ app.get("/jobs", async (req, res) => {
     );
   }
 
-  // Pagination
   const limitNumber = Number(limit);
   const offsetNumber = Number(offset);
 
@@ -72,58 +57,28 @@ app.get("/jobs", async (req, res) => {
   return res.json(paginatedJobs);
 });
 
-// Idempotente: Because system remains the same if it's called multiple times
 app.get("/jobs/:id", (req, res) => {
-  // Params are ALWAYS parsed as STRINGS
   const { id } = req.params;
 
-  const idNumber = Number(id);
-
-  return res.json({
-    job: { id: idNumber, title: `Job with id ${id}` },
-  });
+  const job = jobs.find((job) => job.id === id);
+  if (!job) {
+    return res.status(404).json({ error: "Job not found" });
+  }
+  return res.json(job);
 });
 
-// NO ES Idempotente
 app.post("/jobs", (req, res) => {
   // TODO
 });
 
-// Replace complete resource
 app.put("/jobs/:id", (req, res) => {
   // TODO
 });
 
-// Update partial resource
 app.patch("/jobs/:id", (req, res) => {
   // TODO
 });
 
 app.delete("/jobs/:id", (req, res) => {
   // TODO
-});
-
-// Optional -> /acd o /abcd
-app.get("a{b}cd", (req, res) => {
-  res.send("abcd o acd");
-});
-
-// Comodin * -> return all routes that start with ab and end with cd
-app.get("bb*bb", (req, res) => {
-  res.send("ab*cd");
-});
-
-// Long routes that we don't know how it finished
-app.get("/file/*filename", (req, res) => {
-  res.send("/file/*");
-});
-
-// Usar Regex
-app.get(/.*fly$/, (res, req) => {
-  res.send("Terminando en fly");
-});
-
-// Starting the server
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
 });
