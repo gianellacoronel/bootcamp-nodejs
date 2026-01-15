@@ -4,6 +4,9 @@ import { DEFAULTS } from "./config.js";
 
 const app = express();
 
+// Parse POST request, detect if had the header with json type, and parse it to a json
+app.use(express.json());
+
 app.use((request, respond, next) => {
   const timeString = new Date().toLocaleTimeString();
   console.log(`[${timeString}] ${request.method} ${request.url}`);
@@ -68,7 +71,18 @@ app.get("/jobs/:id", (req, res) => {
 });
 
 app.post("/jobs", (req, res) => {
-  // TODO
+  const { title, company, address, data } = req.body;
+
+  const newJob = {
+    id: crypto.randomUUID(),
+    title,
+    company,
+    address,
+    data,
+  };
+
+  jobs.push(newJob); // We have to do it using DB with an INSERT
+  return res.status(201).json(newJob); // IMPORTANT to add status
 });
 
 app.put("/jobs/:id", (req, res) => {
