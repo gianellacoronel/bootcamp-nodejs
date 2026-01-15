@@ -1,8 +1,25 @@
 import express from "express";
+import cors from "cors";
 import jobs from "./jobs.json" with { type: "json" };
 import { DEFAULTS } from "./config.js";
 
 const app = express();
+
+const ACCEPTED_ORIGINS = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://localhost:3002",
+];
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (ACCEPTED_ORIGINS.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+  }),
+);
 
 // Parse POST request, detect if had the header with json type, and parse it to a json
 app.use(express.json());
