@@ -63,6 +63,11 @@ app.get("/file/*filename", (req, res) => {
   res.send("/file/*");
 });
 
+// Usar Regex
+app.get(/.*fly$/, (res, req) => {
+  res.send("Terminando en fly");
+});
+
 // Starting the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
