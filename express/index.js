@@ -72,6 +72,7 @@ app.get("/jobs", async (req, res) => {
   return res.json(paginatedJobs);
 });
 
+// Idempotente: Because system remains the same if it's called multiple times
 app.get("/jobs/:id", (req, res) => {
   // Params are ALWAYS parsed as STRINGS
   const { id } = req.params;
@@ -83,11 +84,18 @@ app.get("/jobs/:id", (req, res) => {
   });
 });
 
+// NO ES Idempotente
 app.post("/jobs", (req, res) => {
   // TODO
 });
 
+// Replace complete resource
 app.put("/jobs/:id", (req, res) => {
+  // TODO
+});
+
+// Update partial resource
+app.patch("/jobs/:id", (req, res) => {
   // TODO
 });
 
