@@ -3,6 +3,7 @@ import cors from "cors";
 import jobs from "./jobs.json" with { type: "json" };
 import { DEFAULTS } from "./config.js";
 
+const PORT = process.env.PORT ?? DEFAULTS.PORT;
 const app = express();
 
 const ACCEPTED_ORIGINS = [
@@ -112,4 +113,9 @@ app.patch("/jobs/:id", (req, res) => {
 
 app.delete("/jobs/:id", (req, res) => {
   // TODO
+});
+
+// Starting the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
